@@ -2,6 +2,35 @@ from CoordinateSystem import CoordinateSystem
 from Arduino import Arduino
 import time
 class LEDCube(CoordinateSystem):
+    """
+    Class LEDCube:
+    Description:
+        -Controller class for the CoordinateSystem and Arduino models.
+        Instantiate this class to initialize a connection to a cube
+        and begin communicating.
+    Extends:
+        -CoordinateSystem
+    Instance Attributes:
+        -self.arduino > Instance of the arduino class
+    Class Methods:
+        -self.sendStream
+        -self.pulseAll
+        -self.pulseRows
+        -self.pulseLayers
+        -self.clearAll
+        -self.toggleAll
+        -self.equationFrame > TODO - Not implemented yet 
+    Indended Use Case:
+        -Application imports and creates an instance of LEDCube, passing in the
+        cube's dimensions.
+        -Application utilizes the methods present in both CoordinateSystem and
+        LEDCube to create a static display.
+        -Application sends the model's current state to the Arduino by calling
+        LEDCube.sendStream
+        -Application assembles the next frame
+        -Application sends the new frame using sendStream
+        -And so on ...
+    """
     def __init__(self,size):
         #constructor: initialize system component classes and set the initial size
         #the origin will initialize to 0,0,0. The ardi
