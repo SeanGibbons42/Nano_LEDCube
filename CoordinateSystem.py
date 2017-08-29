@@ -77,6 +77,7 @@ class CoordinateSystem(object):
             return 1
         elif state == 'Off' or state == 'off' or state == False or state == 0:
             return 0
+
     def isInBounds(self,position):
         #function isInBounds will return true if a given position is acceptable according to
         #the current grid states.
@@ -91,6 +92,8 @@ class CoordinateSystem(object):
             return False
         else:
             return True
+    def isIsolated(self, position):
+
 
     def togglePixel(self,position):
         #function togglePixel: changes the value of a specific pixel, indicated by a list containing
@@ -187,14 +190,39 @@ class CoordinateSystem(object):
     def getBounds(self):
         #returns the coordinate system bounds (relative to the origin)
         return self.bounds
+
     def getOrigin(self):
         return self.origin
+
     def getDimensions(self):
         #returns the length, width, and height of the coordinate system.
         return self.dimensions
+
     def getPixel(self,pos):
         pos = self.mapToCube(pos)
-        return self.coordArray[pos[2]][pos[1]][pos[0]]
+        try:
+            return self.coordArray[pos[2]][pos[1]][pos[0]]
+        except:
+            return -1
+
+    def count_neighbors_diagonal(self, pos):
+        pos = self.mapToCube(pos)
+        on = off = 0
+        #Iterate through a cube around the point of interest
+        for i in range(pos[2]-1,pos[2]+1):
+            for j in range(pos[1]-1, pos[1]+1):
+                for k in range(pos[0]-1, pos[0]+1):
+                    #if the current point equals the original point, ignore
+                    if [i, j, k] == pos:
+                        pass
+                    #if the point is on, count it as such
+                    elif self.getPixel([i, j, k]) == 1:
+                        on += 1
+                    #if the point is off or is outside the cube,
+                    #count it as off
+                    else:
+                        off += 1
+        return on, off
 
                      ########################################
                      ###########Export functions#############
