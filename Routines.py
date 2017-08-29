@@ -8,43 +8,32 @@ class Routines():
                 self.coordinate_transfer(self.cube, frame)
                 time.sleep(time_interval)
 
-    def checkerboard(self, led_frequency, num_cycles, time_interval=2):
-        #it is simplest to assume the origin is located at
-        #0,0,0. So we store the current origin and then set it
-        #to 0,0,0
-        first_origin = self.cube.getOrigin()
-        self.cube.setOrigin([0, 0, 0])
-        self.cube.clearAll
-        #State of the first LED in the frame. Will toggle
-        #each time thr frame changes to allow two different states
+    def checkerboard(self, num_cycles, time_interval):
         first_led = True
-
+        prev_origin = self.cube.getOrigin()
+        self.cube.setOrigin([0,0,0])
+        led_num = 1
         for i in range(num_cycles):
-            is_on = first_led
-            #iteration must happen in a serpentine pattern to yield
-            #the pattern we want. Otherwise, each row and layer will
-            #be identical
-            for i in range(0,self.cube.dimensions[2],2):
-                for j in range(0,self.cube.dimensions[1],2):
-                    for k in range(self.cube.dimensions[0]):
-                        self.cube.setPixel([i,j,k],is_on)
-                        is_on = not is_on
-                    j = j + 1
-                    #The serpentine pattern moves down one row,
-                    #then starts the next one at the same side that
-                    #the previous row ended on
-                    for k in range(self.cube.dimensions[0],0,-1):
-                        self.cube.setPixel([i,j,k],is_on)
-                        is_on = not is_on
-                #Same thing
-                for j in range(self.cube.dimensions[1],0,-2):
-                    for k in range(self.cube.dimensions[0]):
-                        self.cube.setPixel([i,j,k],is_on)
-                        is_on = not is_on
-                    j = j + 1
-                    for k in range(self.cube.dimensions[0],0,-1):
-                        self.cube.setPixel([i,j,k],is_on)
-                        is_on = not is_on
-            self.cube.sendStream()
-            time.sleep(time_interval)
+            #set the or second LED on (based on the cycle #)
+            if first_led:
+                self.cube.setPixel([0,0,0],"On")
+            else:
+                self.cube.setPixel([1,0,0],"On")
             first_led = not first_led
+            #Iterate through the entire cube. If a given LED does not have
+            #a neighboring LED that is on, turn it on
+            for z in range(self.cube.dimensions[2]):
+                for y in range(self.cube.dimensions[1]):
+                    for x in range(self.cube.dimensions[0]):
+                        #count how many LEDs around the current LED are on or off
+                        n_on, n_off = count_neighbors([x,y,z])
+                        #The first two LED's are taken care of.
+                        #ignore them.
+                        if led_num == 1 or led_num == 2:
+                            pass
+                        elif n_on == 0:
+                            self.cube.setPixel([x, y, z],"On")
+                        else:
+                            self.cube.setPixel([x,y,z],"Off")
+                        led_num += 1
+            time.sleep(time_interval)

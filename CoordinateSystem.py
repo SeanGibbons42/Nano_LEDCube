@@ -198,12 +198,56 @@ class CoordinateSystem(object):
         #returns the length, width, and height of the coordinate system.
         return self.dimensions
 
-    def getPixel(self,pos):
-        pos = self.mapToCube(pos)
+    def getPixel(self,pos,map_pixel=True):
+        """
+        getPixel will return the value of a single LED.
+        the origin must be at 0,0,0 for the correct value to
+        be returned (no negatives). If the grid is already mapped
+        to 0,0,0 then set map_pixel to false in order to prevent
+        double mapping
+        """
+        if map_pixel:
+            pos = self.mapToCube(pos)
+
         try:
             return self.coordArray[pos[2]][pos[1]][pos[0]]
         except:
             return -1
+
+    def count_neighbors(self,pos):
+        """
+        Examines the six points directly next to
+        the current point. Counts the number of neighboring
+        LED's that are on and the number that are off.
+
+        !!Does not diagonal neighbors!! Use the diagonal
+        version of this method to do that!
+
+        TODO: This is a brute-force algorithm and I am not proud
+        of it. If someone can find a more elegant solution,
+        that'd be great.
+        """
+        pos = self.mapToCube(pos)
+        neighbors = []
+        #append the six neighboring points to a list
+        neighbors.append([pos[0]+1,pos[1],pos[2]])
+        neighbors.append([pos[0]-1,pos[1],pos[2]])
+        neighbors.append([pos[0],pos[1]+1,pos[2]])
+        neighbors.append([pos[0],pos[1]-1,pos[2]])
+        neighbors.append([pos[0],pos[1],pos[2]+1])
+        neighbors.append([pos[0],pos[1],pos[2]-1])
+        #declare counters
+        on = off = 0
+        #iterate through the point list and get count the
+        #number that are on.
+        for led in neighbors:
+            if self.getPixel(led, map_pixel=False) == 1:
+                on += 1
+            else:
+                off += 1
+
+        return on, off
+
 
     def count_neighbors_diagonal(self, pos):
         pos = self.mapToCube(pos)
@@ -216,7 +260,7 @@ class CoordinateSystem(object):
                     if [i, j, k] == pos:
                         pass
                     #if the point is on, count it as such
-                    elif self.getPixel([i, j, k]) == 1:
+                elif self.getPixel([i, j, k], map=False) == 1:
                         on += 1
                     #if the point is off or is outside the cube,
                     #count it as off
