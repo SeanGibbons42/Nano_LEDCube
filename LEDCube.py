@@ -19,8 +19,8 @@ class LEDCube(CoordinateSystem):
         -self.pulseLayers
         -self.clearAll
         -self.toggleAll
-        -self.equationFrame > TODO - Not implemented yet 
-    Indended Use Case:
+        -self.equationFrame > TODO - Not implemented yet
+    Intended Use Case:
         -Application imports and creates an instance of LEDCube, passing in the
         cube's dimensions.
         -Application utilizes the methods present in both CoordinateSystem and
