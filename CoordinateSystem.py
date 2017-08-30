@@ -143,6 +143,14 @@ class CoordinateSystem(object):
         for i in range(0, self.dimensions[2]):
             self.setPixel([spCube[0], spCube[1], i],state)
 
+    def setAll(self, state):
+        
+        for z in range(self.bounds[1],self.bounds[0]):
+            for y in range(self.bounds[3],self.bounds[2]):
+                for x in range(self.bounds[5],self.bounds[4]):
+                    setPixel([x,y,z], state)
+
+
     def togglePlane(self,pos, axis):
         #function togglePlane will switch the value of every LED in a plane.
 
