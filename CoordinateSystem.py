@@ -220,7 +220,7 @@ class CoordinateSystem(object):
         the current point. Counts the number of neighboring
         LED's that are on and the number that are off.
 
-        !!Does not diagonal neighbors!! Use the diagonal
+        !!Does not count diagonal neighbors!! Use the diagonal
         version of this method to do that!
 
         TODO: This is a brute-force algorithm and I am not proud
