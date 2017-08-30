@@ -2,14 +2,13 @@ class Conway3d():
     def __init__(self, cs, rules):
         self.grid = cs
 
-
     def random_start(self, num_living):
         """
             function random_start creates a random starting
             config.
         """
         #clear off the grid
-        self.grid.clearAll()
+        self.grid.setAll("Off")
 
         start_points = []
         #get the grid dimensions
