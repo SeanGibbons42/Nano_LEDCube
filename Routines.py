@@ -42,3 +42,24 @@ class Routines():
             #from here on out, just flip-flop all the LED's:
             self.cube.toggleAll()
             time.sleep(time_interval)
+
+    def conwaygame(self, num_gen, time_interval, birth, overpop, underpop):
+        """
+        Description: conwaygame constructs a Conway's Game of life give
+        a rule set and the number of generations to run the game.
+        """
+
+        #instantiate classes for the game itself
+        game_rules = ConwayRules(birth, overpop, underpop)
+        game = Conway3d(self.cube, game_rules)
+
+        #set up a game
+        game.random_start(20)
+        self.cube.sendStream()
+        time.sleep(time_interval)
+
+        #advance the simulation for the specified number of generations
+        for i in range(num_gen):
+            self.game.generation()
+            self.cube.sendStream()
+            time.sleep(time_interval)
