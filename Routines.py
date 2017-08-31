@@ -1,6 +1,7 @@
 from Conway import Conway3d
 from Conway import ConwayRules
-
+import time
+import random
 class Routines():
     def __init__(self, cb):
         self.cube = cb
@@ -23,19 +24,22 @@ class Routines():
         #set the or second LED on (based on the cycle #)
         self.cube.setPixel([0,0,0],"On")
         #
+        print("Starting Checkerboard")
         for z in range(self.cube.dimensions[2]):
             for y in range(self.cube.dimensions[1]):
                 for x in range(self.cube.dimensions[0]):
                     #count how many LEDs around the current LED are on or off
-                    n_on, n_off = count_neighbors([x,y,z])
+                    n_on, n_off = self.cube.count_neighbors([x,y,z])
                     #The first run is taken care of. Skip it:
                     if first_led:
-                        pass
+                        first_led = False
                     #if no neighbors are on, toggle it
                     elif n_on == 0:
                         self.cube.setPixel([x, y, z],"On")
                     else:
                         self.cube.setPixel([x,y,z],"Off")
+        print("Setup Complete")
+        self.cube.sendStream()
         time.sleep(time_interval)
         #we already did 1 cycle, so subtract 1 from the total:
         for i in range(num_cycles-1):
@@ -63,3 +67,44 @@ class Routines():
             self.game.generation()
             self.cube.sendStream()
             time.sleep(time_interval)
+
+    def rain(self,numdrops):
+            currentdrops = []  # Array that holds all current drops
+            maxdim = self.cube.dimensions[0]-1
+            for i in range(numdrops):
+                currentdrops.append(raindrop(maxdim, random.randint(0, maxdim), random.randint(0, maxdim)))  # Create a new drop
+                # update the cube
+                self.cube.clearAll()
+                for drop in currentdrops:
+                    x,y,z = drop.givecoords()
+                    print(x,y,z)
+                    if (x >= 0):
+                        self.cube.setPixel([x,y,z], "On")
+                    else:
+                        currentdrops.remove(drop)
+                    drop.drop()  # drop the drops
+                    # remove any drop that is out of the cube
+
+                self.cube.sendStream()  # Push to arduino
+                time.sleep(0.4)
+
+class raindrop:
+    xpos = 0
+    ypos = 0
+    zpos = 0
+
+    def __init__(self, x, y, z):
+        self.xpos = x
+        self.ypos = y
+        self.zpos = z
+
+    def drop(self):
+        self.xpos -= 1
+
+    def givecoords(self):
+        return self.xpos, self.ypos, self.zpos
+
+    def checkalive(self):
+        if self.xpos == -4:
+            return True
+        return False
