@@ -17,7 +17,7 @@ class Arduino(object):
         #TODO: Make the program search for arduinos, also add exception for port not found.
 
         #initialize a serial port object and return it
-        return serial.Serial("COM4",br)
+        return serial.Serial("COM3",br)
 
     def sendFrame(self,dataStream):
         #function SendFrame: sends a stream of data a byte array.
@@ -33,10 +33,9 @@ class Arduino(object):
     def sendByte(self,data):
         #encodes the data as an ascii binary char (data format for pyserial)
         # and then writes a byte to the board
-        print("Data Sent",data)
         dataChar = chr(data).encode('utf-8')
         dataByte = data.to_bytes(1,'big',signed=False)
-        print("Char Sent",dataByte)
+        
         self.ardPort.write(dataByte)
 
     def getByte(self):

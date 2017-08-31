@@ -56,7 +56,7 @@ class Conway3d():
         return rules.check_live(on)
 
 class ConwayRules():
-    def __init__(pass, birth, overpop, underpop):
+    def __init__(self, birth, overpop, underpop):
         if type(birth) is int:
             self.birth_conditions = [birth]
         else:

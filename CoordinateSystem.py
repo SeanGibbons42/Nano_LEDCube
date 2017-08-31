@@ -93,7 +93,7 @@ class CoordinateSystem(object):
         else:
             return True
     def isIsolated(self, position):
-
+        pass
 
     def togglePixel(self,position):
         #function togglePixel: changes the value of a specific pixel, indicated by a list containing
@@ -103,7 +103,6 @@ class CoordinateSystem(object):
             self.setPixel(position,0)
         elif self.getPixel(position) == 0:
             self.setPixel(position,1)
-
 
     def setPixel(self,position,state):
         #function setPixel will set the value of a single pixel.
@@ -144,7 +143,7 @@ class CoordinateSystem(object):
             self.setPixel([spCube[0], spCube[1], i],state)
 
     def setAll(self, state):
-        
+
         for z in range(self.bounds[1],self.bounds[0]):
             for y in range(self.bounds[3],self.bounds[2]):
                 for x in range(self.bounds[5],self.bounds[4]):
@@ -268,8 +267,8 @@ class CoordinateSystem(object):
                     if [i, j, k] == pos:
                         pass
                     #if the point is on, count it as such
-                elif self.getPixel([i, j, k], map=False) == 1:
-                        on += 1
+                    elif self.getPixel([i, j, k], map=False) == 1:
+                            on += 1
                     #if the point is off or is outside the cube,
                     #count it as off
                     else:

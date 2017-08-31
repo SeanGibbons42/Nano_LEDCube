@@ -45,17 +45,17 @@ class LEDCube(CoordinateSystem):
         stream = self.exportGrid("Stream")
         frame = self.arduino.sendFrame(stream)
 
-    def pulseAll(self):
+    def pulseAll(self, time_interval=0.02):
         #Function pulseAll: iterates through all LED's and turns them on then off
         for x in range(self.bounds[5],self.bounds[4]+1):
             for y in range(self.bounds[3],self.bounds[2]+1):
                 for z in range(self.bounds[1],self.bounds[0]+1):
                     self.setPixel([x,y,z],1);
                     self.sendStream()
-                    time.sleep(0.05)
+                    time.sleep(time_interval)
                     self.setPixel([x,y,z],0)
                     self.sendStream()
-                    time.sleep(0.05)
+                    time.sleep(time_interval)
                     #print(str(x)+", "+str(y)+", "+str(z))
     def pulseRows(self):
         #Function pulseRows: goes through and turns on each vertical row one at a time
@@ -95,5 +95,5 @@ class LEDCube(CoordinateSystem):
             for y in range(self.bounds[3],self.bounds[2]+1):
                 for z in range(self.bounds[1],self.bounds[0]+1):
                     self.togglePixel([x,y,z]);
-                    time.sleep(0.1)
+
         self.sendStream()
