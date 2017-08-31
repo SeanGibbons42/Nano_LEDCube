@@ -88,6 +88,17 @@ class Routines():
                 self.cube.sendStream()  # Push to arduino
                 time.sleep(0.4)
 
+    def snake(self):
+        segments = []
+        head = snakesegment()
+        segments.append(head)
+        for i in range(3):
+            segment = snakesegment(segments[i],[0,0,i])
+
+        
+
+
+
 class raindrop:
     xpos = 0
     ypos = 0
@@ -108,3 +119,22 @@ class raindrop:
         if self.xpos == -4:
             return True
         return False
+
+class snakesegment:
+    prevlink = None
+
+    def __init__(self,prev,pos):
+
+        prevlink = prev
+        xpos = pos[0]
+        ypos = pos[1]
+        zpos = pos[2]
+
+    def givepos():
+        return xpos,ypos,zpos
+
+    def advance():
+        pos = prevlink.givepos()
+        xpos = pos[0]
+        ypos = pos[1]
+        zpos = pos[2]
