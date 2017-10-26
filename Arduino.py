@@ -25,7 +25,6 @@ class Arduino(object):
 
         #convert the raw bytestream into a series of bytes.
         byteStream = self.serializeFrame(dataStream[1])
-        print(dataStream[1])
         #iterate through the bytestream, sending each byte
         for byte in byteStream:
             self.sendByte(byte)
@@ -35,7 +34,7 @@ class Arduino(object):
         # and then writes a byte to the board
         dataChar = chr(data).encode('utf-8')
         dataByte = data.to_bytes(1,'big',signed=False)
-        
+
         self.ardPort.write(dataByte)
 
     def getByte(self):
@@ -50,7 +49,7 @@ class Arduino(object):
             numBytes = self.ardPort.inWaiting()
         time.sleep(0.1)
         numBytes = self.ardPort.inWaiting()
-        print("Bytes:" + str(numBytes))
+
         b = self.ardPort.read(numBytes)
 
         self.ardPort.flush()

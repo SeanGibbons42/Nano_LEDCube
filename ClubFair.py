@@ -4,7 +4,7 @@ import time
 
 cube = LEDCube([4,4,4])
 r_list = Routines(cube)
-r_list.snake(4,50,0.2)
+r_list.snake(4,10000,0.01)
 
 cube.setPixel([0,0,0],1)
 cube.sendStream()

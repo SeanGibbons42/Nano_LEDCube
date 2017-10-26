@@ -92,6 +92,7 @@ class Routines():
         snek = []
         snek = self.grow(snek,length,speed)
         self.movement(snek,num_moves,speed)
+
     def grow(self,snek,length,speed):
         #Speed = time delay
 
@@ -145,20 +146,19 @@ class Routines():
         if len(valid_moves)==0:
             return None
         else:
-            next_move = random.randint(0,len(valid_moves))
+
+            next_move = random.randint(0,len(valid_moves)-1)
+
             #head adds to end of the snek array, making the first elements
             #the tail
-            new_snek = old_snek[1:-1].append(valid_moves[next_move])
-
+            new_snek = old_snek[1:]
+            new_snek.append(valid_moves[next_move])
         return new_snek
 
     def draw_snake(self, snek):
         self.cube.clearAll()
-        self.cube.sendStream()
-
         for segment in snek:
             self.cube.setPixel(segment,1)
-
         self.cube.sendStream()
 
 class raindrop:

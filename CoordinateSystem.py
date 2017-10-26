@@ -84,14 +84,15 @@ class CoordinateSystem(object):
 
         x,y,z = position
         #if any axis coordinate is out of bounds, return false. Else, return true.
-        if x>=self.bounds[0] or x<self.bounds[1]:
+        if x>self.bounds[0] or x<self.bounds[1]:
             return False
-        elif y>=self.bounds[2] or y<self.bounds[3]:
+        elif y>self.bounds[2] or y<self.bounds[3]:
             return False
-        elif z>=self.bounds[4] or z<self.bounds[5]:
+        elif z>self.bounds[4] or z<self.bounds[5]:
             return False
         else:
             return True
+
     def isIsolated(self, position):
         pass
 
@@ -156,15 +157,12 @@ class CoordinateSystem(object):
         #we plan to hit every point on the grid. Thus cubePos is a point on the cube, not
         #a coordinate point.
         cubePos = [self.bounds[1], self.bounds[3], self.bounds[5]]
-        print("Bounds:", self.bounds)
-        print("Starting Position:",cubePos)
         # iterate through the cube array.
         for z in range(self.bounds[5], self.bounds[4]+1):
             for y in range(self.bounds[3], self.bounds[2]+1):
                 for x in range(self.bounds[1], self.bounds[0]+1):
                     cubePos = [x, y, z]
                     # if the current position lies in the plane, set it to the specified value
-                    print(cubePos)
                     if cubePos[axis] == pos:
                         #it's important to make sure the point is mapped to the coordinate system
                         self.togglePixel(cubePos)
