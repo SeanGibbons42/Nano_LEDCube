@@ -88,16 +88,78 @@ class Routines():
                 self.cube.sendStream()  # Push to arduino
                 time.sleep(0.4)
 
-    def snake(self):
-        segments = []
-        head = snakesegment()
-        segments.append(head)
-        for i in range(3):
-            segment = snakesegment(segments[i],[0,0,i])
+    def snake(self, length, num_moves, speed):
+        snek = []
+        snek = self.grow(snek,length,speed)
+        self.movement(snek,num_moves,speed)
+    def grow(self,snek,length,speed):
+        #Speed = time delay
 
-        
+        n_segment = [0,0,0]
+        i=0
+        if length>self.cube.getDimensions()[0]:
+            length = self.cube.getDimensions()[0]
+        while(i<length):
+            n_segment = [i,0,0]
+            snek.append(n_segment)
+            self.cube.setPixel(n_segment,1)
+            self.cube.sendStream()
+            time.sleep(speed)
+            i += 1
+        return snek
 
 
+    def movement(self, snek, num_moves, speed):
+        """
+        1. Select a spot ()
+        2. Add the new position (Update array with new position)
+        3. Display result
+        4. Rinse and repeat i times
+        """
+
+        for i in range(num_moves):
+            snek = self.make_move(snek[-1],snek)
+            if snek == None:
+                break
+            else:
+                self.draw_snake(snek)
+            time.sleep(speed)
+
+    def find_moves(self, pos):
+        """
+        Returns list of valid snake moves
+        Valid: Not occupied (pos==0), no diagonals, in bounds
+        """
+        valid_moves = []
+        #Create x, y, z variables using multiple assignment
+        x,y,z = pos
+        neighbors = [[x+1,y,z],[x-1,y,z],[x,y+1,z],[x,y-1,z],[x,y,z+1],[x,y,z-1]]
+
+        for neighbor in neighbors:
+            if self.cube.isInBounds(neighbor) and self.cube.getPixel(neighbor) == 0:
+                valid_moves.append(neighbor)
+        return valid_moves
+
+    def make_move(self,head, old_snek):
+        valid_moves = self.find_moves(head)
+        if len(valid_moves)==0:
+            return None
+        else:
+            next_move = random.randint(0,len(valid_moves))
+            #head adds to end of the snek array, making the first elements
+            #the tail
+            new_snek = old_snek[1:-1].append(valid_moves[next_move])
+
+        return new_snek
+
+    def draw_snake(self, snek):
+        self.cube.clearAll()
+        self.cube.sendStream()
+
+        for segment in snek:
+            self.cube.setPixel(segment,1)
+
+        self.cube.sendStream()
 
 class raindrop:
     xpos = 0

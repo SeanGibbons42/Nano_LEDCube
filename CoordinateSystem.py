@@ -82,13 +82,13 @@ class CoordinateSystem(object):
         #function isInBounds will return true if a given position is acceptable according to
         #the current grid states.
 
-        x,y,z = position[0],position[1],position[2]
+        x,y,z = position
         #if any axis coordinate is out of bounds, return false. Else, return true.
-        if x>self.bounds[0] or x<self.bounds[1]:
+        if x>=self.bounds[0] or x<self.bounds[1]:
             return False
-        elif y>self.bounds[2] or y<self.bounds[3]:
+        elif y>=self.bounds[2] or y<self.bounds[3]:
             return False
-        elif z>self.bounds[4] or z<self.bounds[5]:
+        elif z>=self.bounds[4] or z<self.bounds[5]:
             return False
         else:
             return True
