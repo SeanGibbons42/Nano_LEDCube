@@ -1,4 +1,5 @@
 import serial
+import serial.tools.list_ports as portlist
 import time
 class Arduino(object):
     def __init__(self,br=9600):
@@ -17,7 +18,17 @@ class Arduino(object):
         #TODO: Make the program search for arduinos, also add exception for port not found.
 
         #initialize a serial port object and return it
-        return serial.Serial("COM3",br)
+        portname = findPort()
+        return serial.Serial(portname,br)
+
+    def findPort(vendorid = 9025, productid = 67):
+        activeports = portlist.comports()
+        for port in activeports:
+            if port.vid == vendorid and port.pid = productid:
+                return port.device
+            else:
+                pass
+        return None
 
     def sendFrame(self,dataStream):
         #function SendFrame: sends a stream of data a byte array.
