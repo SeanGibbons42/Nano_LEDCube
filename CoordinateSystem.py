@@ -8,7 +8,7 @@ Version: 1
 '''
 #TEST COMMENT!!!!!! HELLO WORLD
 class CoordinateSystem(object):
-    def __init__(self,orgn,dims):
+    def __init__(self, orgn,dims):
         #constructor: initialize a coordinate system with an origin (list, [x,y,z])
         #and outer dimensions (list, [x size,y size,z size])
 
@@ -121,7 +121,8 @@ class CoordinateSystem(object):
         #else, continue on and map the coordinate position to its cube position:
         cubePos = self.mapToCube(position)
 
-        #set the led to its indicated state
+        #set the led to its indicated state.
+        #Dimesions are backwards since the first index of an array is the z position
         self.coordArray[cubePos[2]][cubePos[1]][cubePos[0]] = state
         #return positive exit code, indicating successful execution
 

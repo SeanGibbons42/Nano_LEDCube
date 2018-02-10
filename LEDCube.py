@@ -38,7 +38,6 @@ class LEDCube(CoordinateSystem):
         super().__init__([0, 0, 0], size)
         self.arduino = Arduino(9600) #add ard
 
-
     def sendStream(self):
         #Function sendStream: Sends a bytestream to a target device
         #Takes into account
