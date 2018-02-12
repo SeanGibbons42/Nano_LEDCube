@@ -1,9 +1,10 @@
 class Sphere(GObject):
-    def __init__(self):
-        pass
+    def __init__(self, radius, pos):
+        GObject.__init__(pos)
+        self.generate(radius)
 
-    def generate(self):
-        pass
+    def generate(self, radius):
+        
 
     def set_radius(self):
         pass
