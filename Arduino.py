@@ -18,17 +18,21 @@ class Arduino(object):
         #TODO: Make the program search for arduinos, also add exception for port not found.
 
         #initialize a serial port object and return it
-        portname = findPort()
+        portname = self.findPort()
+        print("PORTNAME:", portname)
         return serial.Serial(portname,br)
 
-    def findPort(vendorid = 9025, productid = 67):
+    def findPort(self, vendorid = 9025, productid = 1):
         activeports = portlist.comports()
+        print("Ports", activeports)
         for port in activeports:
-            if port.vid == vendorid and port.pid = productid:
+            print("VID =", port.vid,"  PID =", port.pid)
+            if port.vid == vendorid and port.pid == productid:
+                print("Device:", port.device)
                 return port.device
             else:
                 pass
-        return None
+        #return None
 
     def sendFrame(self,dataStream):
         #function SendFrame: sends a stream of data a byte array.
