@@ -61,9 +61,15 @@ def FreqCube(cube,n,runtime,CHUNK=2**10,RATE=16000,TRIM=20):
 
     vdiv = cube.getDimensions()[2] #the height of the cube
 
+    datalength  = len(c.xvalues()) # the length of the farrays
+
+    detrend = [(1/datalength)*i for i in range(datalength)]
+
     for t in range(runtime):
 
         farray = np.log10(c.readfourier()) #read an array of fourier transform data and take the log base 10 of it
+
+        farray = farray + detrend #add the line to the data to compensate for lower amplitudes at high frequency
 
         xstep = int(len(farray)/len(chunks)) #xstep is the size of a subarray.
 
@@ -113,6 +119,14 @@ def Graphsim(cube):
 
         farray = np.log10(c.readfourier()) #read an array of fourier data and take the log base 10 of it
 
+
+        #calculate a line that fits the slope of the data. Without this low F is higher amplitude than high F
+        detrend = [(1/len(farray))*i for i in range(len(farray))]
+
+        farray = farray + detrend
+
+        x = np.arange(0,len(farray))
+
         vstep = (maxavg-minavg)/vdiv #break up the area between the minimum and maximum averages into h chunks
 
         xstep = int(len(farray)/len(chunks)) #xstep is the size of a subarray. We will make
@@ -135,7 +149,6 @@ def Graphsim(cube):
         ax1.clear()
         ax1.set_ylim([0,vdiv])
         ax1.plot(x,ydata)
-
 
     ani = animation.FuncAnimation(fig,animate,interval=10) # run our animation with pauses of length interval
     plt.show() # make the window visible
