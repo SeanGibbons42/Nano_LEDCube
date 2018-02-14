@@ -12,29 +12,27 @@ class GObject(CoordinateSystem):
         self.origin = new_pos
         self.add()
 
-    def mirror(self, axis, positiion):
+    def mirror(self, axis, position):
         """
         Function mirror will reflect an object across a mirror plane
         Accepts: axis - axis of the mirror plane (0 = x, 1 = y, 2 = z)
                  position - position of the mirror plane on the axis.
         """
-        self.save()
+        self.save()                  #Save previous points so they can be erased
 
-        if axis == 0:
-            chg_dim = 1
+        for point in self.point():        #map position to be reflected over axis
+            point[axis] -= position
 
-        elif axis == 1:
-            chg_dim = 0
+        r = transforms.rotmat(axis)
 
-        elif axis == 2:
-            chg_dim = 2
+        pmatrix = np.array(self.points)
+        pmatrix = np.transpose(pmatrix)
+        pmatrix = np.matmul(r,pmatrix)
+        pmatrix = np.transpose(pmatrix)
+        self.points = pmatrix.tolist()
 
-        else:
-            pass
-
-        for point in self.points:
-            dist = point[chg_dim] - position
-            point[chg_dim] -= 2*chg_dim
+        for point in self.points:         #map position back, as if it was reflected
+            point[axis] += position       #accross the specified plane.
 
         self.erase()
         self.add()
@@ -44,22 +42,18 @@ class GObject(CoordinateSystem):
         Function rotate will rotate an object around a specified axis in quarter rotations
         axis: 0 = x axis, 1 = y, 2 = z.
         """
+
         self.save()
-        r = np.array([[np.cos(angle), -np.sin(angle)],
-                         [np.sin(angle), np.cos(angle)]])
+        r = transforms.rotmat(angle, axis)
         pmatrix = numpy.array(self.points)
 
-        pmatrix2d = np.delete(pmatrix.copy(), axis, 1)
-        amatrix = pmatrix[:,axis]
-
-        pmatrix2d = np.transpose(pmatrix2d)
-        pmatrix2d = np.matmul(r, pmatrix2d)
-        pmatrix2d = np.transpose(pmatrix2d)
-
-        pmatrix[:,axis] = amatrix
+        pmatrix= np.transpose(pmatrix)
+        pmatrix = np.matmul(r, pmatrix)
+        pmatrix = np.transpose(pmatrix)
 
         self.points = pmatrix.tolist()
         self.add()
+
 
     def scale(self, sf):
         """

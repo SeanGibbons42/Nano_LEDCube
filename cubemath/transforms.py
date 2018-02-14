@@ -41,13 +41,3 @@ def refmat(axis):
 
     #h=I-v*v'
     return np.identity(3)-2*np.outer(v,np.transpose(v))
-
-
-def rotate():
-    pass
-
-def reflect():
-    pass
-
-def dilate():
-    pass
