@@ -97,3 +97,16 @@ class LEDCube(CoordinateSystem):
                     self.togglePixel([x,y,z]);
 
         self.sendStream()
+
+
+    def LightCollumn(self,square,z):
+        '''Square needs to be a list of x,y points. Z is just a number <= height'''
+        #HAS NOT BEEN TESTED#
+        for point in square:
+            j = 0
+            x = point[0] #extract the x value
+            y = point[1] #extract the y value
+            while (j<z):
+                #turn all the pixels up to z on
+                self.setPixel((x,y,j),1)
+                j+=1

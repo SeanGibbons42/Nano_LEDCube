@@ -300,3 +300,30 @@ class CoordinateSystem(object):
         elif format=="Stream":
             #return a serialized (one at a time) array of values. useful for serial communication
             return self.dimensions, self.serializeGrid()
+
+    def discretizeCube(self,n):
+        # Create nxn chunks in the XY plane of the cube
+        '''returns a list of squares. squares are lists of x,y points'''
+
+        dims = self.getDimensions()
+        xmax,xmin,ymax,ymin,zax,zmin = self.getBounds()
+
+        CHUNKS = [] # The array that we will use to store the nxn CHUNKS
+        # A Chunk will be stored as a n length array of tuples of (x,y) points in the cube
+        # Z values are not stored in the CHUNKs and need to be assigned later
+
+        # makechunk takes in a starting x and y position and returns a all the points in a square with corners (x,y) and (x+n-1,y+n-1)
+        def makechunk(x,y,n):
+            c = []
+            for i in range(n):
+                for j in range(n):
+                    c.append((x+i,y+j))
+            return c
+
+
+        # We iterate the starting x and y points for makechunk starting at the minimums and going to the maximums in steps of size n
+        for x in range(xmin,xmax,n):
+            for y in range(ymin,ymax,n):
+                CHUNKS.append(makechunk(x,y,n))
+
+        return CHUNKS

@@ -48,7 +48,7 @@ def LightCollumn(cube,square,z):
 
 
 def FreqCube(cube,n,runtime,CHUNK=2**10,RATE=16000,TRIM=20):
-    chunks = discretizeCube(cube,n) #get an array of nxn chunks
+    chunks = cube.discretizeCube(n) #get an array of nxn chunks
 
     c = CubeAudio(chunksize=CHUNK,rate=RATE,trim=TRIM) #Create an instance of CubeAudio named c
 
@@ -92,7 +92,7 @@ def Graphsim(cube):
     RATE = 16000 # we sample at RATE Hz
     TRIM = 20 #how many low frequency points we want to cut off (tend to have very large noise for unknown reason)
 
-    chunks = discretizeCube(cube,n) #get an array of nxn chunks
+    chunks = cube.discretizeCube(n) #get an array of nxn chunks
 
     c = CubeAudio(chunksize=CHUNK,rate=RATE,trim=TRIM) #Create an instance of CubeAudio named c
     maxavg = 10
