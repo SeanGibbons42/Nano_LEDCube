@@ -7,7 +7,10 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 
-def discretizeCube(cube,n): # Create nxn chunks in the XY plane of the cube
+def discretizeCube(cube,n):
+    # Create nxn chunks in the XY plane of the cube
+    '''returns a list of squares. squares are lists of x,y points'''
+
     dims = cube.getDimensions
     xmax,xmin,ymax,ymin,zax,zmin = cube.getBounds()
 
@@ -33,6 +36,8 @@ def discretizeCube(cube,n): # Create nxn chunks in the XY plane of the cube
 
 
 def LightCollumn(cube,square,z):
+    '''Square needs to be a list of x,y points. Z is just a number'''
+
     for point in square:
         j = 0
         x = point[0] #extract the x value
@@ -46,19 +51,21 @@ def FreqCube(cube,n,runtime,CHUNK=2**10,RATE=16000,TRIM=20):
     chunks = discretizeCube(cube,n) #get an array of nxn chunks
 
     c = CubeAudio(chunksize=CHUNK,rate=RATE,trim=TRIM) #Create an instance of CubeAudio named c
-    maxavg = 0  #we start off by setting the maximum the average has been to a very small number
-    minavg = 20 #start off by setting the lowest the average has been to a very high number
-    # these two will be overwritten shortly
+
+    # An amplitude of 10**maxavg or higher will correspond to a max height on the cube.
+    # An amplitude of 10**minavg or lower will correspond to 0 height on the cube
+    maxavg = 10
+    minavg = 8.5
+
+    vstep = (maxavg-minavg)/vdiv #break up the area between the minimum and maximum averages into h chunks
 
     vdiv = cube.getDimensions()[2] #the height of the cube
 
     for t in range(runtime):
 
-        farray = np.log10(c.readfourier()) #read an array of fourier data and take the log base 10 of it
+        farray = np.log10(c.readfourier()) #read an array of fourier transform data and take the log base 10 of it
 
-        vstep = (maxavg-minavg)/vdiv #break up the area between the minimum and maximum averages into h chunks
-
-        xstep = int(len(farray)/len(chunks)) #xstep is the size of a subarray. We will make
+        xstep = int(len(farray)/len(chunks)) #xstep is the size of a subarray.
 
         chunkz = [] # array into which we will store the z values
 
@@ -67,15 +74,6 @@ def FreqCube(cube,n,runtime,CHUNK=2**10,RATE=16000,TRIM=20):
             subarray = farray[i*xstep:(i+1)*xstep] #create a subarray of length xstep that starts at xstep*i
             avg = np.mean(subarray) #find the average value of the subarray
 
-            if (avg>maxavg): #constantly be updating the maximum average to set the scale of the cube
-                maxavg = avg
-                vstep = (maxavg-minavg)/vdiv
-
-            else:
-                if (avg<minavg): # same for the mimumum. We cant change them both at the same time otherwise we will divide by 0
-
-                    minavg = avg
-                    vstep = (maxavg-minavg)/vdiv
 
             z = int(((avg-minavg)*vdiv)/(maxavg-minavg)) #find the z value. Will be = height when avg = maxavg and 0 when avg = minavg
             print(z)
@@ -98,7 +96,7 @@ def Graphsim(cube):
 
     c = CubeAudio(chunksize=CHUNK,rate=RATE,trim=TRIM) #Create an instance of CubeAudio named c
     maxavg = 10
-    minavg = 7
+    minavg = 8.3
     # these two will be overwritten shortly
 
     vdiv = cube.getDimensions()[2] #the height of the cube
@@ -127,6 +125,9 @@ def Graphsim(cube):
 
 
             z = int(((avg-minavg)*vdiv)/(maxavg-minavg)) #find the z value. Will be = height when avg = maxavg and 0 when avg = minavg
+
+            if (z<0):
+                z = 0
 
             for j in range(10):
                 ydata.append(z)

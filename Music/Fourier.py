@@ -25,6 +25,8 @@ x = np.linspace(minf,maxf,(CHUNK/2)-TRIM+1) #precalculate the x axis based on sa
 
 window = np.hanning(CHUNK) # calculate a hanning function for smoothing
 
+detrend = [(1/len(x))*i for i in range(len(x))]
+
 def animate(i):
     ydata = np.fromstring(stream.read(CHUNK),dtype=np.int32) #Read one CHUNK from the stream
     #Detrend data, this was suggested on the internet. Moves the wave so it is centered at 0
@@ -34,6 +36,10 @@ def animate(i):
 
     ytransform = np.abs(np.fft.rfft(data)) #do a real fourier transform on the data
     #x = np.linspace(minf,maxf,len(ytransform[TRIM:]))
+
+    ###LOG PLOT###
+    #logdata = np.log10(ytransform[TRIM:])
+    #detrenddata = logdata + detrend
 
     ax1.clear()
     ax1.set_ylim([0,10**10])
