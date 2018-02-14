@@ -1,6 +1,6 @@
 class Sphere(GObject):
     def __init__(self, radius, pos):
-        GObject.__init__(pos)
+        GObject.__init__([radius-1, radius-1, radius-1], [radius, radius, radius])
         self.radius = radius
         self.generate()
 
@@ -20,23 +20,23 @@ class Sphere(GObject):
         self.dilate(sf)
 
 class Rectangle(GObject):
-    def __init__(self):
-        pass
+    def __init__(self, dims, position):
+        GObject.__init__([0,0,0], dims)
+        self.generate()
 
     def generate(self):
+        self.save()
         self.iterate(self.set_pixel, 1)
+        self.add()
 
-    def set_width(self):
-        pass
+    def set_width(self, nw):
+        self.setDimensions([self.dims[0], nw, self.dims[2]])
+        self.generate()
 
-    def set_length(self):
-        pass
+    def set_length(self, nl):
+        self.setDimensions(nl, self.dims[1], self.dims[2])
+        self.generate()
 
     def set_height(self):
-        pass
-
-    def center_origin(self):
-        pass
-
-    def zero_origin(self):
-        pass
+        self.setDimensions(self.dims[0], self.dims[1], nh)
+        self.generate()

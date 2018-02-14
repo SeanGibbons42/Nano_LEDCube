@@ -1,6 +1,6 @@
 class GObject(CoordinateSystem):
-    def __init__(self, pos, dimensions):
-        CoordinateSystem.__init__(pos, dimensions)
+    def __init__(self, orgn, dims):
+        CoordinateSystem.__init__(orgn, dims)
         self.points = []
         self.oldpoints = []
 
