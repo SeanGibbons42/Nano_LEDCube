@@ -1,6 +1,6 @@
 class GObject(CoordinateSystem):
-    def __init__(self, pos):
-        self.origin = pos
+    def __init__(self, pos, dimensions):
+        CoordinateSystem.__init__(pos, dimensions)
         self.points = []
         self.oldpoints = []
 
@@ -60,6 +60,9 @@ class GObject(CoordinateSystem):
         Function scale will dilate an object by a scale factor.
         """
         self.save()
+        #scale the object dimensions
+        d = sf*np.array(self.dims())
+        self.setDimensions(d.tolist())
         #scale each point
         for point in self.points:
             #scale each dimesion by the scale factor
