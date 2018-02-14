@@ -29,10 +29,18 @@ def rotmat(angle, axis_num, thresh = 3):
 
 def refmat(axis):
 
-    v = np.transpose(np.zeros(3))
-    v[xmatrix]
+    v = np.zeros(3)
+    if axis == 0:
+        v[1] = 1
+    elif axis == 1:
+        v[0] = 1
+    elif axis == 2:
+        v[2] = 1
+    else:
+        raise ValueError("Invalid Axis Selection. Use 0=X, 1=Y, 2=Z")
+
     #h=I-v*v'
-    return np.identity(3)-np.matmul(v,np.transpose(v))
+    return np.identity(3)-2*np.outer(v,np.transpose(v))
 
 
 def rotate():

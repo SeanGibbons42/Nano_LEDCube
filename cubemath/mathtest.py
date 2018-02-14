@@ -29,10 +29,24 @@ def rot_test():
                 print("\tresult =", rpoint)
                 print("\tDot Product =", dp)
 
+def ref_test():
+    print("Reflection Test")
+    a = np.transpose(np.array([1,1,1]))
 
+    for axis in range(3):
+        r = transforms.refmat(axis)
+        result = np.matmul(r,a)
+        print("Axis =",axis,"  result =",result.tolist())
+    """
+    r1 = transforms.refmat(0,1)
+    r2 = transforms.refmat(0,3)
+    result1 = np.matmul(r1,a)
+    result2 = np.matmul(r2,a)
 
-def rev_test():
-    pass
+    print("X = 1:", result1)
+    print("x = 3:", result2)
+    """
 
-rot_test()
+#rot_test()
+ref_test()
 #print(transforms.rotmat(90,0))
