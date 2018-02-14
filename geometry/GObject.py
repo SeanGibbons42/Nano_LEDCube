@@ -34,7 +34,6 @@ class GObject(CoordinateSystem):
         for point in self.points:         #map position back, as if it was reflected
             point[axis] += position       #accross the specified plane.
 
-        self.erase()
         self.add()
 
     def rotate(self, axis, angle):
@@ -65,7 +64,6 @@ class GObject(CoordinateSystem):
         self.setDimensions(d.tolist())
         #scale each point
         for point in self.points:
-            #scale each dimesion by the scale factor
             for dim in point:
                 dim *= sf
 
@@ -83,6 +81,7 @@ class GObject(CoordinateSystem):
             self.setPixel("Off")
 
     def add(self):
+        self.erase()
         for point in self.points:
             self.setPixel("On")
 

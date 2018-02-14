@@ -126,6 +126,16 @@ class CoordinateSystem(object):
         self.coordArray[cubePos[2]][cubePos[1]][cubePos[0]] = state
         #return positive exit code, indicating successful execution
 
+    def iterate(self, function, *args):
+        """
+        function iterate accepts a function with the first parameter being a point.
+        iterate will loop through the cube and call the function for each point in
+        the cube.
+        """
+        for z in range(self.bounds[5], self.bounds[4]):
+            for y in range(self.bounds[3], self.bounds[2]):
+                for x in range(self.bounds[1], self.bounds[0]):
+                    function([x,y,z], *args)
 
     def toggleRow(self,xyPos):
         #iteratively toggle each led in a row
