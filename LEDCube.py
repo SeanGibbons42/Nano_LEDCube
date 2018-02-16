@@ -89,6 +89,7 @@ class LEDCube(CoordinateSystem):
                     self.setPixel([x,y,z],0);
         self.sendStream()
 
+
     def toggleAll(self):
         #Function toggleAll: switches the value of each LED in the array
         for x in range(self.bounds[5],self.bounds[4]+1):
@@ -99,7 +100,7 @@ class LEDCube(CoordinateSystem):
         self.sendStream()
 
 
-    def LightCollumn(self,square,z):
+    def LightColumn(self,square,z):
         '''Square needs to be a list of x,y points. Z is just a number <= height'''
         #HAS NOT BEEN TESTED#
         for point in square:

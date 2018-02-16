@@ -5,51 +5,11 @@ from CubeAudio import CubeAudio
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
-
-def discretizeCube(cube,n):
-    # Create nxn chunks in the XY plane of the cube
-    '''returns a list of squares. squares are lists of x,y points'''
-
-    dims = cube.getDimensions
-    xmax,xmin,ymax,ymin,zax,zmin = cube.getBounds()
-
-    CHUNKS = [] # The array that we will use to store the nxn CHUNKS
-    # A Chunk will be stored as a n length array of tuples of (x,y) points in the cube
-    # Z values are not stored in the CHUNKs and need to be assigned later
-
-    # makechunk takes in a starting x and y position and returns a all the points in a square with corners (x,y) and (x+n-1,y+n-1)
-    def makechunk(x,y,n):
-        c = []
-        for i in range(n):
-            for j in range(n):
-                c.append((x+i,y+j))
-        return c
-
-
-    # We iterate the starting x and y points for makechunk starting at the minimums and going to the maximums in steps of size n
-    for x in range(xmin,xmax,n):
-        for y in range(ymin,ymax,n):
-            CHUNKS.append(makechunk(x,y,n))
-
-    return CHUNKS
-
-
-def LightCollumn(cube,square,z):
-    '''Square needs to be a list of x,y points. Z is just a number'''
-
-    for point in square:
-        j = 0
-        x = point[0] #extract the x value
-        y = point[1] #extract the y value
-        while (j<z):
-            setPixel((x,y,j),1)
-            j+=1
-
+import time
 
 def FreqCube(cube,n,runtime,CHUNK=2**10,RATE=16000,TRIM=20):
     chunks = cube.discretizeCube(n) #get an array of nxn chunks
-
+    print(chunks)
     c = CubeAudio(chunksize=CHUNK,rate=RATE,trim=TRIM) #Create an instance of CubeAudio named c
 
     # An amplitude of 10**maxavg or higher will correspond to a max height on the cube.
@@ -57,9 +17,9 @@ def FreqCube(cube,n,runtime,CHUNK=2**10,RATE=16000,TRIM=20):
     maxavg = 10
     minavg = 8.5
 
-    vstep = (maxavg-minavg)/vdiv #break up the area between the minimum and maximum averages into h chunks
-
     vdiv = cube.getDimensions()[2] #the height of the cube
+
+    vstep = (maxavg-minavg)/vdiv #break up the area between the minimum and maximum averages into h chunks
 
     datalength  = len(c.xvalues()) # the length of the farrays
 
@@ -82,13 +42,26 @@ def FreqCube(cube,n,runtime,CHUNK=2**10,RATE=16000,TRIM=20):
 
 
             z = int(((avg-minavg)*vdiv)/(maxavg-minavg)) #find the z value. Will be = height when avg = maxavg and 0 when avg = minavg
-            print(z)
+            if (z<0):
+                z = 0
+            elif (z>vdiv):
+                z = vdiv
 
             chunkz.append(z)
 
-        for i in range(len(chunks)):
-            LightCollumn(cube,chunks[i],chunkz[i]) #light up our collumns defined by the chunks array to heights stored in chunkz
+        #clear the cube before we send data
+        #Function clearAll: turns off every LED in the cube
+        for x in range(cube.getBounds()[5],cube.getBounds()[4]+1):
+            for y in range(cube.getBounds()[3],cube.getBounds()[2]+1):
+                for z in range(cube.getBounds()[1],cube.getBounds()[0]+1):
+                    cube.setPixel([x,y,z],0);
 
+        for i in range(len(chunks)):
+            cube.LightColumn(chunks[i],chunkz[i]) #light up our collumns defined by the chunks array to heights stored in chunkz
+
+        #send the data and wait about 1/60 of a second
+        cube.sendStream()
+        time.sleep((1/30))
 
 def Graphsim(cube):
 
@@ -125,8 +98,6 @@ def Graphsim(cube):
 
         farray = farray + detrend
 
-        x = np.arange(0,len(farray))
-
         vstep = (maxavg-minavg)/vdiv #break up the area between the minimum and maximum averages into h chunks
 
         xstep = int(len(farray)/len(chunks)) #xstep is the size of a subarray. We will make
@@ -150,10 +121,10 @@ def Graphsim(cube):
         ax1.set_ylim([0,vdiv])
         ax1.plot(x,ydata)
 
-    ani = animation.FuncAnimation(fig,animate,interval=10) # run our animation with pauses of length interval
+    ani = animation.FuncAnimation(fig,animate,interval=1) # run our animation with pauses of length interval
     plt.show() # make the window visible
 
 
-cube = LEDCube([7,7,7])
+cube = LEDCube([4,4,4])
 
-Graphsim(cube)
+FreqCube(cube,1,10000)

@@ -322,8 +322,8 @@ class CoordinateSystem(object):
 
 
         # We iterate the starting x and y points for makechunk starting at the minimums and going to the maximums in steps of size n
-        for x in range(xmin,xmax,n):
-            for y in range(ymin,ymax,n):
+        for x in range(xmin,xmax+1,n):
+            for y in range(ymin,ymax+1,n):
                 CHUNKS.append(makechunk(x,y,n))
 
         return CHUNKS
