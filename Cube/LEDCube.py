@@ -1,5 +1,5 @@
-from CoordinateSystem import CoordinateSystem
-from Arduino import Arduino
+from Cube.CoordinateSystem import CoordinateSystem
+from Cube.Arduino import Arduino
 import time
 class LEDCube(CoordinateSystem):
     """
