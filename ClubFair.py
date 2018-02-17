@@ -1,5 +1,5 @@
 from Routines import Routines
-from LEDCube import LEDCube
+from Cube.LEDCube import LEDCube
 import time
 
 cube = LEDCube([4,4,4])
