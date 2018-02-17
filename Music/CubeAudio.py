@@ -1,6 +1,5 @@
 import pyaudio
 import numpy as np
-
 class CubeAudio(object):
     def __init__(self,chunksize=2**10,rate=16000,trim=20):
 

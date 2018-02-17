@@ -1,13 +1,17 @@
 import sys
 sys.path.append("..\\")
 from LEDCube import LEDCube
-from CubeAudio import CubeAudio
+from Music.CubeAudio import CubeAudio
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import time
+import threading
 
-def FreqCube(cube,n,runtime,CHUNK=2**10,RATE=16000,TRIM=20):
+def FreqCube(cube,n,runtime):
+    CHUNK=2**10
+    RATE=16000
+    TRIM=20
     chunks = cube.discretizeCube(n) #get an array of nxn chunks
     print(chunks)
     c = CubeAudio(chunksize=CHUNK,rate=RATE,trim=TRIM) #Create an instance of CubeAudio named c
@@ -124,7 +128,26 @@ def Graphsim(cube):
     ani = animation.FuncAnimation(fig,animate,interval=1) # run our animation with pauses of length interval
     plt.show() # make the window visible
 
+def fouriergraph():
+    fig = plt.figure() #Create a matplotlib figure
+    ax1 = fig.add_subplot(1,1,1) # add a subplot that we can animate (Constantly Update)
 
-cube = LEDCube([4,4,4])
+    f = CubeAudio() # start a cubeaudio instance
 
-FreqCube(cube,1,10000)
+    x = f.xvalues()   #get the x axis for the plot
+
+    def animate(i):
+        y = f.readfourier() # pull some y values
+        #reset the plot then plot again
+        ax1.clear()
+        ax1.set_ylim([0,10**10.5])
+        ax1.plot(x,y)
+
+    ani = animation.FuncAnimation(fig,animate,interval=1000/60) # run our animation with pauses of length interval
+    plt.show()
+
+def FreqCube_WGraph(cube,n,runtime):
+
+    cubethread = threading.Thread(target = FreqCube, args=(cube,n,runtime))
+    cubethread.start()
+    fouriergraph()
