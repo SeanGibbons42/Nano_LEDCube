@@ -40,3 +40,48 @@ class Rectangle(GObject):
     def set_height(self):
         self.setDimensions(self.dims[0], self.dims[1], nh)
         self.generate()
+
+class Letter(GObject):
+    def __init__(self):
+        pass
+
+class Circle(GObject):
+    def __init__(self, radius, axis):
+        self.radius = radius
+        self.axis = axis
+
+        d = [2*radius,2*radius, 2*radius]
+        orgn = [radius, radius, radius]
+        d[axis] = 1
+        GObject.__init__(orgn, d)
+
+    def generate(self):
+        self.iterate(self.set_if_in_radius, self.axis)
+
+    def set_if_in_radius(self, pt, axis):
+        r = 0
+        for i in range(len(pt)):
+            if not i == axis:
+                r += pt[i]**2
+        r = r**0.5
+
+        if r <= self.radius:
+            self.setPixel(pt, 1)
+
+    def set_radius(self, nr):
+        sf = nr/self.radius
+        self.radius = nr
+        self.dilate(sf)
+
+class Cylinder(GObject):
+    def __init__(self, radius, axis, height):
+
+        GObject.__init__()
+
+class Triangle(GObject):
+    def __init__(self):
+        pass
+
+def Pyramid(GObject):
+    def __init(self):
+        pass
