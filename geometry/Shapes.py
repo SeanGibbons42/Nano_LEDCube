@@ -1,6 +1,6 @@
 class Sphere(GObject):
     def __init__(self, radius, pos):
-        GObject.__init__([radius-1, radius-1, radius-1], [radius, radius, radius])
+        GObject.__init__([radius,radius,radius], [2*radius+1, 2*radius+1, 2*radius+1])
         self.radius = radius
         self.generate()
 
@@ -20,8 +20,17 @@ class Sphere(GObject):
         self.dilate(sf)
 
 class Rectangle(GObject):
-    def __init__(self, dims, position):
-        GObject.__init__([0,0,0], dims)
+    def __init__(self, dims, position, center = "Corner"):
+        if center == "Corner":
+            orgn = [0,0,0]
+        elif center == "Center"
+            orgn = [dims[0]/2, dims[1]/2, dims[2]/2]
+        else:
+            raise ValueError("Invalid Center Specifier. center can be defined as" +
+                             "corner or Center. When setting the origin to center" +
+                             "ensure that the rectangle dimensions are odd.")
+
+        GObject.__init__(orgn, dims)
         self.generate()
 
     def generate(self):
@@ -50,10 +59,9 @@ class Circle(GObject):
         self.radius = radius
         self.axis = axis
 
-        d = [2*radius,2*radius, 2*radius]
-        orgn = [radius, radius, radius]
+        d = [2*radius+1,2*radius+1, 2*radius+1]
         d[axis] = 1
-        GObject.__init__(orgn, d)
+        GObject.__init__([radius, radius , radius], d)
 
     def generate(self):
         self.iterate(self.set_if_in_radius, self.axis)
@@ -74,12 +82,41 @@ class Circle(GObject):
         self.dilate(sf)
 
 class Cylinder(GObject):
-    def __init__(self, radius, axis, height):
+    def __init__(self, radius, axis, height, center="Bottom"):
+        orgn = [radius, radius, radius]
+        d = [2*radius+1, 2*radius+1, 2*radius+1]
 
-        GObject.__init__()
+        #set the origin to the bottom or centroid of the cylinder
+        if center == "Bottom":
+            orgn[axis] = 0
+        elif center == "Center" and not height%2 == 0:
+            orgn[axis] = height-1/2
+        else:
+            raise ValueError("Invalid Center Specifier. center can be defined as" +
+                             "Bottom or Center. When setting the origin to center" +
+                             "ensure that the height is odd.")
+        d[axis] = height
+
+        GObject.__init__(orgn, d)
+        self.generate()
+
+    def generate(self, axis):
+        self.iterate(self.set_if_in_shape, axis)
+
+    def set_if_in_shape(self, pt, axis):
+        center = self.getOrigin().copy()
+        center[axis] = pt[axis]
+        r = 0
+        for i in range(3):
+            r += (pt[i] - origin[i])**2
+        r = r**0.5
+
+        if r<radius:
+            self.setPixel(pt, 1)
+
 
 class Triangle(GObject):
-    def __init__(self):
+    def __init__(self, base):
         pass
 
 def Pyramid(GObject):
