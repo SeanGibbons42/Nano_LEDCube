@@ -12,7 +12,7 @@ class Sphere(GObject):
             + (pt[2]-self.origin[2])**2)**0.5
 
         if r<=self.radius:
-            self.set_pixel(pt, 1)
+            self.points.append(pt)
 
     def set_radius(self, nr):
         sf = nr/self.radius

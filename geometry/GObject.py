@@ -1,4 +1,4 @@
-import Shapes
+import geometry.Shapes
 
 class GFactory(Object):
     def __init__(self):
@@ -6,6 +6,7 @@ class GFactory(Object):
 
     def create_shape(self, stype, name, *args, **kwargs):
         if stype == "Sphere":
+            #Sphere accepts radius and
             nshape = Shapes.Sphere(args[0], args[1])
         elif stype == "Circle":
             nshape = Shapes.Circle(args[0], args[1])
@@ -15,7 +16,7 @@ class GFactory(Object):
             nshape = Shapes.Cylinder(args[0], args[1], args[2], kwargs[0])
         else:
             raise ValueError("Invalid Shape Specifier. Call GFactory.get_valid_shapes()"
-                             " for valid specifiers.") 
+                             " for valid specifiers.")
 
         shapes.append(nshape)
         return nshape
