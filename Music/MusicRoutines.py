@@ -75,7 +75,6 @@ def FreqCube(cube, n, runtime):
         cube.sendStream()
         time.sleep((1 / 30))
 
-
 def Graphsim(cube):
 
     n = 2
@@ -142,7 +141,6 @@ def Graphsim(cube):
     ani = animation.FuncAnimation(fig, animate, interval=1)
     plt.show()  # make the window visible
 
-
 def fouriergraph():
     fig = plt.figure()  # Create a matplotlib figure
     # add a subplot that we can animate (Constantly Update)
@@ -163,9 +161,12 @@ def fouriergraph():
     ani = animation.FuncAnimation(fig, animate, interval=1000 / 60)
     plt.show()
 
-
 def FreqCube_WGraph(cube, n, runtime):
     # Start a thread that runs the cube. Graph needs to be in the main thread
     cubethread = threading.Thread(target=FreqCube, args=(cube, n, runtime))
     cubethread.start()
     fouriergraph()
+
+#fouriergraph()
+cube = LEDCube([4,4,4])
+FreqCube_WGraph(cube,2,1000)
