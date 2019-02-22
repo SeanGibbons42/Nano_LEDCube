@@ -8,7 +8,7 @@ Version: 1
 '''
 #TEST COMMENT!!!!!! HELLO WORLD
 class CoordinateSystem(object):
-    def __init__(self, orgn,dims):
+    def __init__(self, orgn, dims):
         #constructor: initialize a coordinate system with an origin (list, [x,y,z])
         #and outer dimensions (list, [x size,y size,z size])
 
@@ -23,7 +23,10 @@ class CoordinateSystem(object):
 
         #assign the bounds of the coordinate system relative to the origin.
         self.setBounds()
-
+        print("Initializing CS.")
+        print("Dimensions:", dims)
+        print("Origin:", orgn)
+        print("Bounds", self.bounds)
         #initialize the coordinate system array.
         self.coordArray=numpy.zeros([dims[0],dims[1],dims[2]])
 
@@ -123,7 +126,8 @@ class CoordinateSystem(object):
 
         #set the led to its indicated state.
         #Dimesions are backwards since the first index of an array is the z position
-        self.coordArray[cubePos[2]][cubePos[1]][cubePos[0]] = state
+        if self.isInBounds(cubePos):
+            self.coordArray[cubePos[2]][cubePos[1]][cubePos[0]] = state
         #return positive exit code, indicating successful execution
 
     def iterate(self, function, *args):

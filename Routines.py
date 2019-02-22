@@ -22,7 +22,7 @@ class Routines():
         self.cube.setOrigin([0,0,0])
         first_led = True
         #set the or second LED on (based on the cycle #)
-        self.cube.setPixel([0,0,0],"On")
+        self.cube.setPixel([0,0,0], "On")
         #
         print("Starting Checkerboard")
         for z in range(self.cube.dimensions[2]):

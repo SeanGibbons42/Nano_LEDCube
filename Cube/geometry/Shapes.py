@@ -1,6 +1,8 @@
+from .GObject import GObject
+
 class Sphere(GObject):
     def __init__(self, radius, pos):
-        GObject.__init__([radius,radius,radius], [2*radius+1, 2*radius+1, 2*radius+1])
+        GObject.__init__(self, [radius, radius, radius], [2*radius+1, 2*radius+1, 2*radius+1], pos)
         self.radius = radius
         self.generate()
 
@@ -8,10 +10,10 @@ class Sphere(GObject):
         self.iterate(self.set_if_in_sphere)
 
     def set_if_in_sphere(self, pt):
-        r = ((pt[0] - self.origin[0])**2 + (pt[1] - self.origin[1])**2
-            + (pt[2]-self.origin[2])**2)**0.5
-
+        r = (pt[0]**2 + pt[1]**2 + pt[2]**2)**0.5
+        print("Next point:", pt)
         if r<=self.radius:
+            print("\tAdding pt")
             self.points.append(pt)
 
     def set_radius(self, nr):
@@ -23,7 +25,7 @@ class Rectangle(GObject):
     def __init__(self, dims, position, center = "Corner"):
         if center == "Corner":
             orgn = [0,0,0]
-        elif center == "Center"
+        elif center == "Center":
             orgn = [dims[0]/2, dims[1]/2, dims[2]/2]
         else:
             raise ValueError("Invalid Center Specifier. center can be defined as" +

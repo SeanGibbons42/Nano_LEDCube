@@ -2,12 +2,10 @@ from Routines import Routines
 from Cube.LEDCube import LEDCube
 import time
 
-cube = LEDCube([4,4,4])
+cube = LEDCube([8,8,8], testmode=True)
 r_list = Routines(cube)
-r_list.snake(4,10000,0.01)
+r_list.snake(8, 50, 0.2)
 
-cube.setPixel([0,0,0],1)
-cube.sendStream()
 """
 while True:
     r_list.checkerboard(50,0.2)

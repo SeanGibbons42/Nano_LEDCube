@@ -1,45 +1,15 @@
-import geometry.Shapes
 
-class GFactory(Object):
-    def __init__(self):
-        self.shapes = []
-
-    def create_shape(self, stype, name, *args, **kwargs):
-        if stype == "Sphere":
-            #Sphere accepts radius and
-            nshape = Shapes.Sphere(args[0], args[1])
-        elif stype == "Circle":
-            nshape = Shapes.Circle(args[0], args[1])
-        elif stype == "Rectangle":
-            nshape = Shapes.Rectangle(args[0], args[0], kwargs[0])
-        elif stype == "Cylinder":
-            nshape = Shapes.Cylinder(args[0], args[1], args[2], kwargs[0])
-        else:
-            raise ValueError("Invalid Shape Specifier. Call GFactory.get_valid_shapes()"
-                             " for valid specifiers.")
-
-        shapes.append(nshape)
-        return nshape
-
-    def get_shape(self, name):
-        for shape in self.shapes:
-            if shape.get_name() == name:
-                return shape
-        return None
-
-    def remove_shape(self, name):
-        for i in range(len(self.shapes)):
-            if shape[i].get_name() == name:
-                del shape[i]
-
-    def get_valid_shapes(self):
-        return "Circle, Sphere, Rectangle (=Rectangular Prism), Cylinder"
+from ..CoordinateSystem import CoordinateSystem
 
 class GObject(CoordinateSystem):
-    def __init__(self, orgn, dims):
-        CoordinateSystem.__init__(orgn, dims)
+    def __init__(self, orgn, dims, pos):
+        CoordinateSystem.__init__(self, orgn, dims)
+        print("Generating Shape")
+        print("\tOrigin is:", orgn)
+        print("\tDimensions are:", dims)
         self.points = []
         self.oldpoints = []
+        self.position = pos
 
     def translate(self, new_pos):
         """
@@ -107,23 +77,41 @@ class GObject(CoordinateSystem):
         self.add()
 
     def save(self):
-        self.oldpoints = self.points
+        self.oldpoints = self.points.copy()
 
-    def erase(self):
+    def erase(self, cube = None):
         """
         erase will remove the current representation of the object and paint
         a new one.
         """
-        for point in self.oldpoints():
-            self.setPixel("Off")
+        for point in self.oldpoints:
+            self.setPixel(point, "Off")
 
-    def add(self):
-        self.erase()
+        if cube is not None:
+            self.map(cube)
+
+    def add(self, cube = None):
+        self.erase(cube = cube)
         for point in self.points:
-            self.setPixel("On")
+            self.setPixel(point, "On")
+        if cube is not None:
+            self.map(cube)
+
+    def map_pt(self, point, cube):
+        n_pt = [point[0], point[1], point[2]]
+        for i in range(3):
+            b_pt[0] += self.position[0]
+        if point in self.points:
+            cube.setPixel(n_pt, "On")
+        else:
+            cube.setPixel(n_pt, "Off")
+
+    def map(self, cube):
+        self.iterate(self.map_pt, cube)
 
     def draw(self, cube):
-        self.add()
+        self.add(cube = cube)
+        print(self.points)
         cube.sendStream()
 
     def kill(self, seq):

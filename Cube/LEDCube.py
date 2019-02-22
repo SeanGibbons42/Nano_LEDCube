@@ -1,5 +1,7 @@
 from Cube.CoordinateSystem import CoordinateSystem
 from Cube.Arduino import Arduino
+from Cube.Emulator import Emulator
+
 import time
 class LEDCube(CoordinateSystem):
     """
@@ -31,18 +33,25 @@ class LEDCube(CoordinateSystem):
         -Application sends the new frame using sendStream
         -And so on ...
     """
-    def __init__(self,size):
+    def __init__(self, size, testmode = False):
         #constructor: initialize system component classes and set the initial size
         #the origin will initialize to 0,0,0. The ardi
-
+        self.testmode = testmode
         super().__init__([0, 0, 0], size)
-        self.arduino = Arduino(9600) #add ard
+        if self.testmode:
+            self.arduino = Emulator(size)
+        else:
+            self.arduino = Arduino(9600) #add ard
 
     def sendStream(self):
         #Function sendStream: Sends a bytestream to a target device
         #Takes into account
-        stream = self.exportGrid("Stream")
-        frame = self.arduino.sendFrame(stream)
+        if self.testmode:
+            data = self.exportGrid("Array")
+        else:
+            data = self.exportGrid("Stream")
+
+        self.arduino.sendFrame(data)
 
     def pulseAll(self, time_interval=0.02):
         #Function pulseAll: iterates through all LED's and turns them on then off
@@ -56,7 +65,8 @@ class LEDCube(CoordinateSystem):
                     self.sendStream()
                     time.sleep(time_interval)
                     #print(str(x)+", "+str(y)+", "+str(z))
-    def pulseRows(self):
+
+    def pulseRows(self, time_interval=0.05):
         #Function pulseRows: goes through and turns on each vertical row one at a time
         for x in range(self.bounds[5],self.bounds[4]+1):
             for y in range(self.bounds[3],self.bounds[2]+1):
@@ -65,8 +75,9 @@ class LEDCube(CoordinateSystem):
                 time.sleep(0.05)
                 self.setRow([x,y],0)
                 self.sendStream()
-                time.sleep(0.05)
-    def pulseLayers(self):
+                time.sleep(time_interval)
+
+    def pulseLayers(self, time_interval=0.1):
         #Function pulseLayer: goes through and turns on each layer
         for z in range(self.bounds[5],self.bounds[4]+1):
             self.setPlane(z,2,1)
@@ -74,8 +85,9 @@ class LEDCube(CoordinateSystem):
             time.sleep(0.1)
             self.setPlane(z,2,0)
             self.sendStream()
-            time.sleep(0.1)
-    def equationFrame(self,equation):
+            time.sleep(time_interval)
+
+    def equationFrame(self):
         #displays a parsed expression on the cube
         #NOT IMPLEMENTED IN 1.0! -- We need an equation parser for this to work!!
         return

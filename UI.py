@@ -1,5 +1,5 @@
 from tkinter import *
-from LEDCube import LEDCube
+from Cube.LEDCube import LEDCube
 
 import threading
 
